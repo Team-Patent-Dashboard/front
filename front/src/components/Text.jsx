@@ -6,7 +6,9 @@ const Text = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  white-space: nowrap;
+  text-align: left;
+
+  white-space: normal;
 `;
 
 const MainText = styled(Text)`
@@ -22,6 +24,7 @@ const TitleText = styled(Text)`
 `;
 
 const ContentText = styled(Text)`
+  width: 100%;
   font-size: 14px;
   font-weight: normal;
   color: #838383;

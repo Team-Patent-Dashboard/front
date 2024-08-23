@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
@@ -11,32 +12,46 @@ import {
 import { ContentText, MainText, TitleText } from "../components/Text";
 
 const Home = () => {
-  const [main, setMain] = useState({ id: 1 });
-  const [dataList, setDataList] = useState([
-    { id: 2 },
-    { id: 3 },
-    { id: 4 },
-    { id: 5 },
-  ]);
+  const [main, setMain] = useState({});
+  const [dataList, setDataList] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("https://werticlebe.gabia.io/api/main_news")
+      .then((response) => {
+        const data = response.data;
+        setMain(data[0]);
+        setDataList(data.slice(1));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   return (
     <PageLayout>
       <img
-        src={require("../assets/main.png")}
-        style={{ width: "100vw", height: "100%", marginBottom: "50px" }}
+        src={require("../assets/main.jpeg")}
+        style={{
+          width: "100vw",
+          height: "500px",
+          marginBottom: "50px",
+          objectFit: "cover",
+        }}
         alt="logo"
       />
       <Field>
         <MainText> 주요 특허 정보를 쉽게 탐색해보세요</MainText>
-
         <ViewButton to="/news">기사 더보기</ViewButton>
       </Field>
+      <div style={{ height: "10px" }} />
       <MainLayout>
         <MainItem
           id={main.id}
           title={main.title}
-          keyWord={main.keyWord}
+          keyWord={main.keyword}
           source={main.source}
-          imgUrl={main.imgUrl}
+          imgUrl={main.imageUrl}
         />
         <ListLayout>
           {dataList.map((data, index) => (
@@ -44,9 +59,9 @@ const Home = () => {
               key={index}
               id={data.id}
               title={data.title}
-              keyWord={data.keyWord}
+              keyWord={data.keyword}
               source={data.source}
-              imgUrl={data.imgUrl}
+              imgUrl={data.imageUrl}
             />
           ))}
         </ListLayout>
@@ -105,19 +120,12 @@ const MainItem = ({ id, title, keyWord, source, imgUrl }) => {
       <TextLayout
         style={{
           padding: "20px",
+          width: `calc(100% - 40px)`,
         }}
       >
         <TitleText>{title ?? "제목이 없습니다."}</TitleText>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "5px",
-          }}
-        >
-          <ContentText>{keyWord ?? "키워드"}</ContentText>
-          <ContentText>{source ?? "출처"}</ContentText>
-        </div>
+        <ContentText>{keyWord ?? "키워드"}</ContentText>
+        <ContentText>{source ?? "출처"}</ContentText>
       </TextLayout>
     </MainItemButton>
   );
@@ -145,55 +153,52 @@ const ExpandedImage = styled.img`
 const SubItem = ({ id, title, keyWord, source, imgUrl }) => {
   return (
     <SubItemButton to={`/detail/${id}`}>
-      <TextLayout
+      <div
         style={{
-          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          gap: "5px",
+          width: "100%",
         }}
       >
         <TitleText>{title ?? "제목이 없습니다."}</TitleText>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "5px",
-          }}
-        >
-          <ContentText>{keyWord ?? "키워드"}</ContentText>
-          <ContentText>{source ?? "출처"}</ContentText>
-        </div>
-      </TextLayout>
-      {imgUrl ? (
-        <img
-          src={imgUrl}
-          alt="sub image"
-          style={{
-            width: "70px",
-            height: "70px",
-            borderRadius: "10px",
-          }}
-        />
-      ) : (
-        <img
-          src="https://via.placeholder.com/70.jpg"
-          alt="100 * 200 size image"
-          style={{
-            width: "70px",
-            height: "70px",
-            borderRadius: "10px",
-          }}
-        />
-      )}
+        <ContentText>{keyWord ?? "키워드"}</ContentText>
+        {/* <ContentText>{source ?? "출처"}</ContentText> */}
+      </div>
+      <div style={{ width: "100px", height: "100px", marginLeft: "10px" }}>
+        {imgUrl ? (
+          <img
+            src={imgUrl}
+            alt="sub image"
+            style={{
+              width: "70px",
+              height: "70px",
+              borderRadius: "10px",
+            }}
+          />
+        ) : (
+          <img
+            src="https://via.placeholder.com/70.jpg"
+            alt="100 * 200 size image"
+            style={{
+              width: "70px",
+              height: "70px",
+              borderRadius: "10px",
+            }}
+          />
+        )}
+      </div>
     </SubItemButton>
   );
 };
 
 const SubItemButton = styled(Link)`
   width: 100%;
-  height: 70px;
+
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   border: none;
   background-color: white;
   cursor: pointer;

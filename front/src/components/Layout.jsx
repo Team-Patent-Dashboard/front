@@ -30,10 +30,11 @@ const MainLayout = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 20px;
   width: 100%;
-  height: 340px;
+  height: 100%;
+  overflow: hidden;
 `;
 
 const ListLayout = styled.div`
@@ -43,6 +44,7 @@ const ListLayout = styled.div`
   justify-content: space-between;
   height: 100%;
   width: 36%;
+  gap: 40px;
 `;
 
 const TextLayout = styled.div`
