@@ -36,7 +36,6 @@ const Detail = () => {
 
   useEffect(() => {
     axios
-      // analsis/1
       .get("https://werticlebe.gabia.io/api/article_analysis/" + id)
       .then((response) => {
         const data = response.data;
@@ -47,7 +46,9 @@ const Detail = () => {
       });
   }, [id]);
 
-  return (
+  return data == sampleData ? (
+    <PageLayout>loading...</PageLayout>
+  ) : (
     <PageLayout>
       <div style={{ height: "60px" }} />
       <MainText>{data.article.title}</MainText>
@@ -118,6 +119,24 @@ const Detail = () => {
     </PageLayout>
   );
 };
+
+const LoadingCircle = styled.div`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 3px solid var(--Gray);
+  border-top: 3px solid var(--MainBlue);
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;
 
 const ListLayout = styled.div`
   display: flex;
