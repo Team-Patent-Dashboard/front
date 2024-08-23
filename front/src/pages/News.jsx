@@ -77,7 +77,6 @@ const NewsCard = ({ id, title, keyWord, imgUrl, source, iframe }) => {
       {imgUrl ? (
         <CardImage src={imgUrl} />
       ) : (
-        // spinner local gif
         <div
           style={{
             width: "100%",

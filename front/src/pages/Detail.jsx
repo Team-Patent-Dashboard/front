@@ -33,11 +33,11 @@ const sampleData = {
 const Detail = () => {
   const [data, setData] = useState(sampleData);
   const { id } = useParams();
-  console.log(id);
 
   useEffect(() => {
     axios
-      .post("https://werticlebe.gabia.io/api/article_analysis", { id })
+      // analsis/1
+      .get("https://werticlebe.gabia.io/api/article_analysis/" + id)
       .then((response) => {
         const data = response.data;
         setData(data);
@@ -51,19 +51,57 @@ const Detail = () => {
     <PageLayout>
       <div style={{ height: "60px" }} />
       <MainText>{data.article.title}</MainText>
-      <ContentText>{data.article.keyword}</ContentText>
+      <div style={{ height: "10px" }} />
+      <RowLayout
+        style={{
+          gap: "10px",
+        }}
+      >
+        <Keyword>키워드</Keyword>
+        <ContentText>{data.article.keyword}</ContentText>
+      </RowLayout>
+
       <div style={{ height: "40px" }} />
       <RowLayout
         style={{
           justifyContent: "center",
           alignItems: "flex-start",
-          gap: "50px",
+          gap: "90px",
         }}
       >
-        <BorderOutlinebox>
-          <TitleText>기사 내용</TitleText>
-          <ContentText>{data.article.full_text}</ContentText>
-        </BorderOutlinebox>
+        <div
+          style={{
+            width: "50%",
+          }}
+        >
+          <TitleText
+            style={{
+              marginLeft: "20px",
+            }}
+          >
+            기사 내용
+          </TitleText>
+          <div style={{ height: "20px" }} />
+          <BorderOutlinebox>
+            <ContentText>{data.article.full_text}</ContentText>
+            <button
+              style={{
+                backgroundColor: "#3D67FC1A",
+                padding: "10px",
+                borderRadius: "10px",
+                marginTop: "20px",
+                cursor: "pointer",
+                color: "#3D67FC",
+                fontSize: "12px",
+                border: "none",
+                width: "100%",
+              }}
+            >
+              원문 기사 보러가기
+            </button>
+          </BorderOutlinebox>
+        </div>
+
         <ListLayout>
           <TitleText>관련 특허 정보를 알아보세요</TitleText>
           {data.related_patents.map((patent, index) => (
@@ -76,6 +114,7 @@ const Detail = () => {
           ))}
         </ListLayout>
       </RowLayout>
+      <div style={{ height: "200px" }} />
     </PageLayout>
   );
 };
@@ -89,21 +128,47 @@ const ListLayout = styled.div`
   gap: 20px;
 `;
 
+const Keyword = styled.div`
+  font-size: 12px;
+  color: #3d67fc;
+  border-radius: 10px;
+  background-color: #3d67fc1a;
+  padding: 0px 20px;
+  white-space: nowrap;
+`;
+
 const PatentItem = ({ patent_title, patent_description, patent_link }) => {
   return (
     <BorderBox>
       <TitleText>{patent_title}</TitleText>
+      <div style={{ height: "10px" }} />
       <ContentText>{patent_description}</ContentText>
-      <a href>
-        <ContentText>{patent_link}</ContentText>
-      </a>
+      <div style={{ height: "20px" }} />
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "flex-end",
+        }}
+      >
+        <a
+          href={patent_link}
+          style={{
+            color: "black",
+            textDecoration: "underline",
+            fontSize: "12px",
+          }}
+        >
+          자세히 보기
+        </a>
+      </div>
     </BorderBox>
   );
 };
 
 const BorderBox = styled.div`
-  border-radius: 20px;
-  padding: 10px;
+  border-radius: 10px;
+  padding: 20px;
   background-color: #f5f5f5;
   width: 100%;
   height: 100%;
@@ -111,9 +176,9 @@ const BorderBox = styled.div`
 
 const BorderOutlinebox = styled.div`
   border: 1px solid #f5f5f5;
-  border-radius: 20px;
-  padding: 10px;
-  width: 50%;
+  border-radius: 10px;
+  padding: 20px;
+  width: 100%;
   height: 100%;
   min-height: 200px;
 `;
